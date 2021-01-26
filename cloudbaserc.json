@@ -12,7 +12,7 @@
           "uploadType": "image",
           "containerPort": 80,
           "imageInfo": {
-            "imageUrl": "wordpress:5.6.0"
+            "imageUrl": "wordpress:latest"
           },
           "envVariables": {
             "WORDPRESS_DB_HOST": "{{env.DB_IP}}:{{env.DB_PORT}}",
