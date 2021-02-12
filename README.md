@@ -2,7 +2,7 @@
   <img height="100px" src="./logo.png" />
 </p>
 
-# [WordPress](https://www.napi.ltd:target="_blank")
+# [WordPress](https://www.napi.ltd)
 
 WordPress 是一种使用 PHP 语言开发的博客平台，用户可以在支持 PHP 和 MySQL 数据库的服务器上架设自己的网站。
 
