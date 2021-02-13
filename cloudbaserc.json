@@ -1,5 +1,5 @@
 {
-  "version": "2.0",
+  "version": "1.2.13",
   "envId": "{{env.ENV_ID}}",
   "framework": {
     "name": "wordpress",
@@ -8,9 +8,10 @@
         "use": "@cloudbase/framework-plugin-container",
         "inputs": {
           "serviceName": "wordpress",
+          "containerPort": 80,
+          "policyThreshold": 80,
           "servicePath": "/",
           "uploadType": "image",
-          "containerPort": 80,
           "imageInfo": {
             "imageUrl": "wordpress:latest"
           },
