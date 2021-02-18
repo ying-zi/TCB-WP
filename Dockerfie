@@ -1,2 +1,2 @@
 FROM wordpress:latest
-COPY custom.ini $PHP_INI_DIR/conf.d/custom.ini
+COPY custom.ini /usr/local/etc/php/conf.d
