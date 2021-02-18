@@ -9,7 +9,8 @@
         "inputs": {
           "serviceName": "napi",
           "servicePath": "/",
-          "containerPort": 80
+          "containerPort": 80,
+          "policyThreshold": 80
         }
       }
     }
