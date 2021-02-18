@@ -1,3 +1,0 @@
-FROM wordpress:latest
-COPY ./custom.ini /usr/local/etc/php/conf.d/custom.ini
-RUN apachectl restart
