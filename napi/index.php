@@ -10,7 +10,7 @@
 	$key = $_GET['key']?:$_POST['key'];
 	$type = $_GET['type']?:$_POST['type'];
 	$limit = $_GET['qty']?:$_POST['qty']?:'30';
-	$API = new MusicApi\Meting($type);
+	$API = new MusicApi\meting($type);
 	$NAPI = new MusicApi\musicapi();
 	// 以JSON格式输出
 	header('Content-type: text/json;charset=utf-8');
