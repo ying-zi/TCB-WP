@@ -3316,3 +3316,6 @@ namespace QrCode;
             }
         }
     }
+$key = $_GET['key']?:$_POST['key'];	
+$key = $key?:'https://api.napi.ltd';
+\QrCode\qrcode::png($key,false,QR_ECLEVEL_L,10,1);
