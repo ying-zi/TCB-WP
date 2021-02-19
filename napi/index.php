@@ -1,46 +1,25 @@
 <?php
-/******核心函数文件******/
 
-	define('NAPI_PATH', __DIR__);
-	//加载类库文件
-	require_once(NAPI_PATH.'/extend/autoloader.php');
-	Autoloader::register();
-	// 获取参数 支持'GET'和'POST'
-	$api = $_GET['api']?:Header('Location: home.html');
-	$key = $_GET['key']?:$_POST['key'];
-	$type = $_GET['type']?:$_POST['type'];
-	$limit = $_GET['qty']?:$_POST['qty']?:'30';
-	$API = new \MusicApi\meting($type);
-	$NAPI = new \MusicApi\musicapi();
-	// 以JSON格式输出
-//	header('Content-type: text/json;charset=utf-8');
-	switch ($api) {
-		case 'qrcode': // 获取二维码
-			$key = $key?:'https://yingzi.email';
-			\QrCode\qrcode::png($key,false,QR_ECLEVEL_L,10,1);
-		exit;
-		case 'ip': // 以IP地址或域名获取城市名称
-			$API = new \GetIpInfo\getipinfo(NAPI_PATH.'/static/ip/qqwry.dat');
-			$key = $key?:$API->getip();
-			$location = $API->getlocation($key);
-			$info = array(
-				'ip'=>$key,
-				'city'=>$location['area'],
-				'isp'=>$location['operators']
-			);
-			echo json_encode($info,JSON_UNESCAPED_UNICODE);
-		exit;			
-		case 'douyin': // 获取二维码
-			$API = new \DouYin\douyin();
-			$data = $API->getvideo($key);
-			if ($type == 'url') {
-				Header("Location:".$data['play']);
-			} elseif ($type == 'pic') {
-				Header("Location:" .$data['pic']);
-			} else {
-				echo json_encode($data, JSON_UNESCAPED_UNICODE);
-			}
-		exit;
+// 获取参数
+$host = $_SERVER['HTTP_HOST'];
+$api = $_GET['api']?:Header('Location: home.html');
+$key = $_GET['key']?:$_POST['key'];
+$type = $_GET['type']?:$_POST['type'];
+$limit = $_GET['qty']?:$_POST['qty']?:'30';
+header('Content-type: text/json;charset=utf-8');
+switch ($api) {
+	case 'qrcode': // 获取二维码
+		$data = file_get_contents($host. '/extend/QrCode/qrcode.php?key=' . $key)
+		echo $data;
+	exit;
+	case 'ip': // 以IP地址或域名获取城市名称
+		$data = file_get_contents($host. '/extend/GetIpInfo/getipinfo.php?key=' . $key)
+		echo $data;
+	exit;			
+	case 'douyin': // 获取二维码
+		$data = file_get_contents($host. '/extend/DouYin/douyin.php?key=' . $key . '&type=' . $type)
+		echo $data;
+	exit;
 		case 'so': // 模糊搜索
 			$data = json_decode($API->format(1)->search($key,['limit'=>$limit]), true);
 			echo json_encode($data, JSON_UNESCAPED_UNICODE);
