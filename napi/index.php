@@ -10,17 +10,17 @@
 	$key = $_GET['key']?:$_POST['key'];
 	$type = $_GET['type']?:$_POST['type'];
 	$limit = $_GET['qty']?:$_POST['qty']?:'30';
-	$API = new MusicApi\meting($type);
-	$NAPI = new MusicApi\musicapi();
+	$API = new \MusicApi\meting($type);
+	$NAPI = new \MusicApi\musicapi();
 	// 以JSON格式输出
 	header('Content-type: text/json;charset=utf-8');
 	switch ($api) {
 		case 'qrcode': // 获取二维码
 			$key = $key?:'https://yingzi.email';
-			QrCode\qrcode::png($key,false,QR_ECLEVEL_L,10,1);
+			\QrCode\qrcode::png($key,false,QR_ECLEVEL_L,10,1);
 		exit;
 		case 'ip': // 以IP地址或域名获取城市名称
-			$API = new GetIpInfo\getipinfo(NAPI_PATH.'/static/ip/qqwry.dat');
+			$API = new \GetIpInfo\getipinfo(NAPI_PATH.'/static/ip/qqwry.dat');
 			$key = $key?:$API->getip();
 			$location = $API->getlocation($key);
 			$info = array(
@@ -29,10 +29,17 @@
 				'isp'=>$location['operators']
 			);
 			echo json_encode($info,JSON_UNESCAPED_UNICODE);
-		exit;
+		exit;			
 		case 'douyin': // 获取二维码
-			$API = new DouYin\douyin();
-			echo $API->GetDyVideo($key, $type);
+			$API = new \DouYin\douyin();
+			$data = $API->getvideo($key);
+			if ($type == 'url') {
+				Header("Location:".$data['play']);
+			} elseif ($type == 'pic') {
+				Header("Location:" .$data['pic']);
+			} else {
+				echo json_encode($data, JSON_UNESCAPED_UNICODE);
+			}
 		exit;
 		case 'so': // 模糊搜索
 			$data = json_decode($API->format(1)->search($key,['limit'=>$limit]), true);
