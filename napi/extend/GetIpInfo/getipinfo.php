@@ -141,4 +141,16 @@ namespace GetIpInfo;
 			return $ip;
 		}
     }
+	
+	
+$key = $_GET['key']?:$_POST['key'];
+$API=new \GetIpInfo\getipinfo('./qqwry.dat');
+$key = $key?:$API->getip();
+$location=$API->getlocation($key);
+$info = array(
+	'ip'=>$key,
+	'city'=>$location['area'],
+	'isp'=>$location['operators']
+);
+echo json_encode($info,JSON_UNESCAPED_UNICODE);
 ?>
