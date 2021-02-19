@@ -13,7 +13,7 @@
 	$API = new \MusicApi\meting($type);
 	$NAPI = new \MusicApi\musicapi();
 	// 以JSON格式输出
-	header('Content-type: text/json;charset=utf-8');
+//	header('Content-type: text/json;charset=utf-8');
 	switch ($api) {
 		case 'qrcode': // 获取二维码
 			$key = $key?:'https://yingzi.email';
