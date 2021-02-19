@@ -144,11 +144,8 @@ class DouYin{
 		return $output;
 	}
 }
-
-
 $key = $_GET['key']?:$_POST['key'];
 $type = $_GET['type']?:$_POST['type'];
-
 $API = new \DouYin\douyin();
 $data = json_decode($API->getinfo($key), true);
 if ($type == 'url') {
@@ -156,7 +153,6 @@ Header("Location:".$data['video']['play']);
 } elseif ($type == 'pic') {
 	Header("Location:" .$data['video']['pic']);
 } else {
-        header('Content-type: text/json;charset=utf-8');
 	echo json_encode($data, JSON_UNESCAPED_UNICODE);
 }
 ?>
