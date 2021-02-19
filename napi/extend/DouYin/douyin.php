@@ -7,7 +7,7 @@ class DouYin {
         if ($dy) {
             preg_match('/[a-zA-z]+:\/\/[^\s]*/', $dy, $url);
             if (preg_match('/v.douyin.com/', $url[0]) == 1) {
-					$loc = get_headers($url[0], true)['location'];
+		    $loc = get_headers($url[0], true)['location'];
                     $start = 'video/';
                     $end = '/?region';
                     $id = $this->get_id($loc,$start,$end);
@@ -15,7 +15,7 @@ class DouYin {
                     $title = $arr['item_list'][0]["share_info"]["share_title"];
                     $music = $arr['item_list'][0]['music']['play_url']["url_list"][0];
                     $cover = $arr['item_list'][0]['video']["origin_cover"]["url_list"][0];
-					$videourl = str_replace('playwm', 'play', $arr['item_list'][0]["video"]["play_addr"]["url_list"][0]);
+		    $videourl = str_replace('playwm', 'play', $arr['item_list'][0]["video"]["play_addr"]["url_list"][0]);
                     preg_match('/href="(.*?)">Found/', $this->get_url($videourl), $playurl);
 
                     $res = array(
