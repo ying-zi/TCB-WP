@@ -1,92 +1,68 @@
 <?php
-/* File Info 
- * Author:      AiMuC 
- * CreateTime:  2021/2/12 下午2:50:15 
- * LastEditor:  AiMuC
- * ModifyTime:  2021/2/13 下午12:59:15
- * Description: 
-*/
-
-/* 
- * @Description: 获取抖音短视频无水印视频数据
- * @param: url 视频连接
- * @param: output 默认值为Json 共两种类型 Download/Json
- * @return: Video/Json
-*/
 
 namespace DouYin;
 
-class DouYin{
-	public function GetDyVideo($url, $output = "json")
-	{
-		$url = substr($url,strpos($url,'http'));
-		if(strpos($url,' ')>0) $url = substr($url,0,strpos($url,' '));
-		if ($output == null) $output = "json";
-		$WebData = $this->MyRequest($url, "", "GET", "", "");
-		$VideoId = explode("/", $WebData['headers']['location']);
-		$VideoData = $this->MyRequest("https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/?item_ids=$VideoId[5]", "", "GET", "", "");
-		$VideoData = json_decode($VideoData['body'], true);
-		$VideoSrc = str_replace("playwm", "play", $VideoData['item_list'][0]['video']['play_addr']['url_list'][0]); //视频去水印未跳转地址
-		$VideoTitle = $VideoData['item_list'][0]['desc']; //视频标题
-		$VideoImg = $VideoData['item_list'][0]['video']['origin_cover']['url_list'][0]; //视频封面
-		if ($output == "url") {
-			$Video = $this->MyRequest($VideoSrc, "", "GET", "", "", "PE");
-			Header("Content-type: video/mp4"); //定义头部为mp4
-			echo $Video['body']; //输出视频
-		} else if ($output == "json") {
-			$ReturnArr = array(
-				'code' => 1,
-				'msg' => '解析成功',
-				'url' => $VideoSrc,
-				'title' => $VideoTitle,
-				'pic' => $VideoImg,
-			);
-			echo json_encode($ReturnArr, JSON_UNESCAPED_UNICODE);
-		}
-	}
+class DouYin {
+    public function getvideo($dy) {
+        if ($dy) {
+            preg_match('/[a-zA-z]+:\/\/[^\s]*/', $dy, $url);
+            if (preg_match('/v.douyin.com/', $url[0]) == 1) {
+					$loc = get_headers($url[0], true)['location'];
+                    $start = 'video/';
+                    $end = '/?region';
+                    $id = $this->get_id($loc,$start,$end);
+                    $arr = json_decode($this->get_url("https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/?item_ids=$id"), true);
+                    $title = $arr['item_list'][0]["share_info"]["share_title"];
+                    $music = $arr['item_list'][0]['music']['play_url']["url_list"][0];
+                    $cover = $arr['item_list'][0]['video']["origin_cover"]["url_list"][0];
+					$videourl = str_replace('playwm', 'play', $arr['item_list'][0]["video"]["play_addr"]["url_list"][0]);
+                    preg_match('/href="(.*?)">Found/', $this->get_url($videourl), $playurl);
 
-	/* 
-	 * @Description: Web请求函数
-	 * @param: url 必填
-	 * @param: header 请求头 为空时使用默认值
-	 * @param: type 请求类型
-	 * @param: data 请求数据
-	 * @param: DataType 数据类型 分为1,2 1为数据拼接传参 2为json传参
-	 * @param: HeaderType 请求头类型 默认为PC请求头 值为PE时请求头为手机
-	 * @return: result
-	*/
-	private function MyRequest($url, $header, $type, $data, $DataType, $HeaderType = "PC")
-	{
-		if (empty($header)) {
-			if ($HeaderType == "PC") {
-				$header = "user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36 Edg/88.0.705.63\r\n";
-			} else if ($HeaderType == "PE") {
-				$header = "user-agent:Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/88.0.4324.150\r\n";
-			}
-		}
-		if (!empty($data)) {
-			if ($DataType == 1) {
-				$data = http_build_query($data); //数据拼接
-			} else if ($DataType == 2) {
-				$data = json_encode($data, JSON_UNESCAPED_UNICODE); //数据格式转换
-			}
-		}
-		$options = array(
-			'http' => array(
-				'method' => $type,
-				"header" => $header,
-				'content' => $data,
-				'timeout' => 15 * 60, // 超时时间（单位:s）
-			)
-		);
-		$context = stream_context_create($options);
-		$result = file_get_contents($url, false, $context);
-		$headers = get_headers($url, true); //获取请求返回的header
-		$ReturnArr = array(
-			'headers' => $headers,
-			'body' => $result
-		);
-		return $ReturnArr;
+                    $res = array(
+                        'code' => 200,
+                        'title' => $title,
+                        'url' => $videourl,
+                        'play' => $playurl[1],
+                        'music' => $music,
+                        'pic' => $cover,
+                        'msg' => '解析成功'
+                    );
+            } else {
+                $res = array(
+                    'code' => 201,
+                    'msg' => '请输入正确的抖音视频链接'
+                );
+            }
+        } else {
+            $res = array(
+                'code' => 201,
+                'msg' => '请输入抖音链接'
+            );
+        }
+        return $res;
+    }
+    
+    // 获取视频id
+    function get_id($content,$start,$end) {
+        $r = explode($start, $content);
+        if (isset($r[1])) {
+        $r = explode($end, $r[1]);
+        return $r[0];
+        }
+        return '';
+    }
+	function get_url($url) {
+		$Header=array("User-Agent:Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1");
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL,$url);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($ch,CURLOPT_HTTPHEADER,$Header);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+		$result =  curl_exec($ch);
+		curl_close ($ch);
+		$result=mb_convert_encoding($result, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5');
+		return $result;
 	}
 }
 ?>
