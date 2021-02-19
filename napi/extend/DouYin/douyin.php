@@ -156,7 +156,6 @@ Header("Location:".$data['video']['play']);
 } elseif ($type == 'pic') {
 	Header("Location:" .$data['video']['pic']);
 } else {
-	
         header('Content-type: text/json;charset=utf-8');
 	echo json_encode($data, JSON_UNESCAPED_UNICODE);
 }
