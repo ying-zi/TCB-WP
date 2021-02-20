@@ -10,7 +10,7 @@
           "serviceName": "napi",
           "servicePath": "/",
           "containerPort": 80,
-          "policyThreshold": 80
+          "policyThreshold": 80,
           "volumeMounts": {
             "/var/www/html": "napi-cfs"
           }
