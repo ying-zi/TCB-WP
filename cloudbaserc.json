@@ -1,18 +1,29 @@
 {
-  "envId": "{{env.ENV_ID}}",
   "version": "2.0",
+  "envId": "{{env.ENV_ID}}",
   "framework": {
     "name": "napi",
     "plugins": {
-      "container": {
+      "client": {
         "use": "@cloudbase/framework-plugin-container",
         "inputs": {
           "serviceName": "napi",
           "servicePath": "/",
           "containerPort": 80,
           "policyThreshold": 80
+          "volumeMounts": {
+            "/var/www/html": "napi-cfs"
+          }
         }
       }
+    },
+    "requirement": {
+      "addons": [
+        {
+          "type": "CFS",
+          "name": "napi-cfs"
+        }
+      ]
     }
   }
 }
