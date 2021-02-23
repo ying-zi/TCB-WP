@@ -8,13 +8,9 @@
         "use": "@cloudbase/framework-plugin-container",
         "inputs": {
           "serviceName": "wordpress",
-          "containerPort": 80,
-          "policyThreshold": 80,
           "servicePath": "/",
-          "uploadType": "image",
-          "imageInfo": {
-            "imageUrl": "wordpress:latest"
-          },
+          "uploadType": "package",
+          "containerPort": 80,
           "envVariables": {
             "WORDPRESS_DB_HOST": "{{env.DB_IP}}:{{env.DB_PORT}}",
             "WORDPRESS_DB_NAME": "wordpress"
