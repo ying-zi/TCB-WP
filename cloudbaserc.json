@@ -1,22 +1,26 @@
-
 {
   "version": "2.0",
   "envId": "{{env.ENV_ID}}",
   "framework": {
-    "name": "centos",
+    "name": "wordpress",
     "plugins": {
       "client": {
         "use": "@cloudbase/framework-plugin-container",
         "inputs": {
-          "serviceName": "centos",
+          "serviceName": "wordpress",
+          "containerPort": 80,
+          "policyThreshold": 80,
           "servicePath": "/",
           "uploadType": "image",
-          "containerPort": 80,
           "imageInfo": {
-            "imageUrl": "centos:latest"
+            "imageUrl": "wordpress:latest"
+          },
+          "envVariables": {
+            "WORDPRESS_DB_HOST": "{{env.DB_IP}}:{{env.DB_PORT}}",
+            "WORDPRESS_DB_NAME": "wordpress"
           },
           "volumeMounts": {
-            "/var/www/html": "centos-cfs"
+            "/var/www/html": "wordpress-cfs"
           }
         }
       }
@@ -25,8 +29,18 @@
       "addons": [
         {
           "type": "CFS",
-          "name": "centos-cfs"
+          "name": "wordpress-cfs"
         },
+        {
+          "type": "CynosDB",
+          "name": "wordpress",
+          "envMap": {
+            "IP": "DB_IP",
+            "PORT": "DB_PORT",
+            "USERNAME": "WORDPRESS_DB_USER",
+            "PASSWORD": "WORDPRESS_DB_PASSWORD"
+          }
+        }
       ]
     }
   }
