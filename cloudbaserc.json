@@ -11,6 +11,7 @@
           "servicePath": "/",
           "uploadType": "package",
           "containerPort": 80,
+          "policyThreshold": 80,
           "envVariables": {
             "WORDPRESS_DB_HOST": "{{env.DB_IP}}:{{env.DB_PORT}}",
             "WORDPRESS_DB_NAME": "wordpress"
