@@ -13,7 +13,7 @@
           "servicePath": "/",
           "uploadType": "image",
           "imageInfo": {
-            "imageUrl": "wordpress:latest"
+            "imageUrl": "wordpress:5.7.1"
           },
           "envVariables": {
             "WORDPRESS_DB_HOST": "{{env.DB_IP}}:{{env.DB_PORT}}",
