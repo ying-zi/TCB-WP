@@ -14,11 +14,7 @@
           "uploadType": "image",
           "imageInfo": {
             "imageUrl": "ccr.ccs.tencentyun.com/library/centos:8"
-          },
-          "envVariables": {
-            "WORDPRESS_DB_HOST": "{{env.DB_IP}}:{{env.DB_PORT}}",
-            "WORDPRESS_DB_NAME": "centos"
-          },
+          }
           "volumeMounts": {
             "/var/www/html": "centos-cfs"
           }
