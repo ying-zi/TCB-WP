@@ -15,7 +15,7 @@
           "imageInfo": {
             "imageUrl": "ccr.ccs.tencentyun.com/library/centos:8"
           }
-          "volumeMounts": {
+          "volumeMounts":{
             "/var/www/html": "centos-cfs"
           }
         }
