@@ -14,7 +14,7 @@
           "uploadType": "image",
           "imageInfo": {
             "imageUrl": "ccr.ccs.tencentyun.com/library/centos:8"
-          }
+          },
           "volumeMounts":{
             "/var/www/html": "centos-cfs"
           }
